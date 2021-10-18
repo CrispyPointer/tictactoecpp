@@ -1,14 +1,16 @@
 #include "game.h"
 #include <iostream>
 using namespace std;
+
 game::game(){
-    string n1,n2,mark,ans;
+    string n1, n2, mark, ans;
     int score1, score2;
+    bool letter = true;
     bool game_over = false;
     bool bad_move = false;
     bool restart = false;
     bool escape = false;
-    int x,y;
+    int x{},y{};
     cout<<"Name of player one: ";
     getline(cin,n1);
     cout<<"Name of player two: ";
@@ -38,11 +40,28 @@ game::game(){
                 do
                 {
                     cout<<player1->get_name()<<"--'"<<player1->get_mark()<<"' Location:   ";
-                    cin >> x;
-                    cin >>y;
+                        do{
+                            cin>>x;
+                            if(cin.fail()){
+                                cout<<"Please enter a valid move: ";
+                                cin.clear();
+                                cin.ignore();
+                                }
+                            else break;
+                            }while(1);
+                    do{
+                            cin>>y;
+                            if(cin.fail()){
+                                cout<<"Please enter a valid move: ";
+                                cin.clear();
+                                cin.ignore();
+                                }
+                            else break;
+                            }while(1);
                     mark = player1->get_mark();
                     if (check_move(x,y,bad_move)==true) cout<<"Invalid move!! Please enter another move."<<endl;
                 }while(check_move(x,y,bad_move)==true);
+
                 move(x,y,mark);
                 clear_screen();
                 board();
@@ -68,8 +87,24 @@ game::game(){
             {
                 do{
                     cout<<player2->get_name()<<"--'"<<player2->get_mark()<<"' Location:   ";
-                    cin >> x;
-                    cin >>y;
+                    do{
+                            cin>>x;
+                            if(cin.fail()){
+                                cout<<"Please enter a valid move:  ";
+                                cin.clear();
+                                cin.ignore();
+                                }
+                            else break;
+                            }while(1);
+                    do{
+                            cin>>y;
+                            if(cin.fail()){
+                                cout<<"Please enter a valid move: ";
+                                cin.clear();
+                                cin.ignore();
+                                }
+                            else break;
+                            }while(1);
                     mark = player2->get_mark();
                     if (check_move(x,y,bad_move)==true) cout<<"Invalid move!! Please enter another move."<<endl;
                 }while(check_move(x,y,bad_move)==true);
@@ -117,6 +152,7 @@ void game::clear_board(){
         V3[i]=" ";
     }
 }
+
 void game::board(){
     cout<<"\t1\t\t2\t\t3"<< endl;
     cout<<"\t\t|\t\t|\t\t"<<endl;
@@ -173,11 +209,11 @@ bool game::check_win (string mark, bool game_over){
 }
 
 bool game::check_move(int x,int y, bool bad_move){
-    if              ((x<1)||(x>3)) bad_move = true;
-    else if       ((y<1)||(y>3)) bad_move = true;
+    if (((!(x>=1&&x<=3)))&&((!(y>=1&&y<=3)))) bad_move = true; // check for x and y in range (1,3)
 
+    //Check for already marked coordinates.
     else if (x==1){
-        if (V1[y-1]!=" ") bad_move = true;
+        if (V1[y-1]!=" ") bad_move = true;                                                      
     }
     else if (x==2){
         if (V2[y-1]!=" ") bad_move = true;
@@ -185,7 +221,6 @@ bool game::check_move(int x,int y, bool bad_move){
     else if (x==3){
         if (V3[y-1]!=" ") bad_move = true;
     }
-    
     return bad_move;
 }
 
